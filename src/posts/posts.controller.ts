@@ -5,8 +5,8 @@ import {
   Get,
   NotFoundException,
   Param,
+  Patch,
   Post,
-  Put,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 
@@ -103,22 +103,37 @@ export class PostsController {
     return newPost;
   }
 
-  @Put()
-  update(@Body() postData: PostModel): PostModel {
-    const updatedPost = posts.map((post) =>
-      post.id === postData.id ? postData : post,
-    );
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body('author') author?: string,
+    @Body('title') title?: string,
+    @Body('content') content?: string,
+  ): PostModel {
+    const post = this.getPost(id);
 
-    posts = updatedPost;
+    if (author) {
+      post.author = author;
+    }
+    if (title) {
+      post.title = title;
+    }
+    if (content) {
+      post.content = content;
+    }
 
-    return postData;
+    posts = posts.map((prev) => (prev.id === +id ? post : prev));
+
+    return post;
   }
 
   @Delete(':id')
-  delete(@Param('id') postId: string): PostModel[] {
-    const deletedPosts = posts.filter((post) => post.id !== +postId);
+  delete(@Param('id') id: string): string {
+    this.getPost(id);
+
+    const deletedPosts = posts.filter((post) => post.id !== +id);
     posts = deletedPosts;
 
-    return deletedPosts;
+    return id;
   }
 }
