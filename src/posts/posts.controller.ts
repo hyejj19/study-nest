@@ -84,13 +84,23 @@ export class PostsController {
   }
 
   @Post()
-  create(@Body() postData: PostModel): PostModel {
-    posts.push({
+  create(
+    @Body('author') author: string,
+    @Body('title') title: string,
+    @Body('content') content: string,
+  ): PostModel {
+    const newPost: PostModel = {
       id: posts.length + 1,
-      ...postData,
-    });
+      author,
+      title,
+      content,
+      commentCount: 0,
+      likeCount: 0,
+    };
 
-    return postData;
+    posts.push(newPost);
+
+    return newPost;
   }
 
   @Put()
