@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -73,7 +74,13 @@ export class PostsController {
 
   @Get(':id')
   getPost(@Param('id') postId: string): PostModel {
-    return posts.find((post) => post.id === +postId);
+    const post = posts.find((post) => post.id === +postId);
+
+    if (!post) {
+      throw new NotFoundException();
+    }
+
+    return post;
   }
 
   @Post()
