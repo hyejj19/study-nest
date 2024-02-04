@@ -42,8 +42,8 @@ export class PostsService {
     return posts;
   }
 
-  getOnePost(postId: string): PostModel {
-    const post = posts.find((post) => post.id === +postId);
+  getOnePost(postId: number): PostModel {
+    const post = posts.find((post) => post.id === postId);
 
     if (!post) {
       throw new NotFoundException();
@@ -68,7 +68,7 @@ export class PostsService {
   }
 
   updatePost(
-    id: string,
+    id: number,
     author?: string,
     title?: string,
     content?: string,
@@ -90,7 +90,7 @@ export class PostsService {
     return post;
   }
 
-  deletePost(id: string): string {
+  deletePost(id: number): number {
     this.getOnePost(id);
 
     const deletedPosts = posts.filter((post) => post.id !== +id);
